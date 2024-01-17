@@ -58,7 +58,7 @@ You should see something like this
 - [CalldataLength](https://github.com/rareskills/huff-puzzles/blob/main/src/CalldataLength.huff) ✅
 - [Add1](https://github.com/rareskills/huff-puzzles/blob/main/src/Add1.huff) ✅
 - [Multiply](https://github.com/rareskills/huff-puzzles/blob/main/src/Multiply.huff) ✅
-- [NonPayable](https://github.com/rareskills/huff-puzzles/blob/main/src/NonPayable.huff)
+- [NonPayable](https://github.com/rareskills/huff-puzzles/blob/main/src/NonPayable.huff) ✅
 - [FooBar](https://github.com/rareskills/huff-puzzles/blob/main/src/FooBar.huff)
 - [SimpleStore](https://github.com/rareskills/huff-puzzles/blob/main/src/SimpleStore.huff)
 - [RevertCustom](https://github.com/rareskills/huff-puzzles/blob/main/src/RevertCustom.huff)

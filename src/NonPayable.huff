@@ -9,5 +9,13 @@
  */
 
 #define macro MAIN() = takes(0) returns(0) {
+    // push msg.value onto the stack, jump to label ret if it is zero
+    callvalue iszero ret jumpi
 
+    // revert on failed dispatch (msg.value != 0)
+    0x00 0x00 revert
+    
+    ret:
+        // return 0 if msg.value == 0
+        0x00 0x00 return
 }
