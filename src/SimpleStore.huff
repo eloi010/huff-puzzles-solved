@@ -14,7 +14,37 @@
 #define function store(uint256) payable returns()
 #define function read() payable returns(uint256)
 
+#define macro STORE() = takes(0) returns(0) {
+    // load the first argument onto the stack
+    0x04 calldataload   // [arg]
+    // store the argument in storage slot 0
+    0x00 sstore         // []
+    // return 0
+    0x00 0x00 return
+}
+
+#define macro READ() = takes(0) returns(0) {
+    // retrieve the value stored in storage slot 0 onto the stack
+    0x00 sload        // [val]
+    // store the first value of the stack in memory at offset 0
+    0x00 mstore
+    // return 32 bytes of memory starting at offset 0
+    0x20 0x00 return
+}
 
 #define macro MAIN() = takes(0) returns(0) {
-    
+    // load the function signature onto the stack
+    0x00 calldataload 0xe0 shr  // [func_sig]
+
+    // dispatch to the appropriate function
+    dup1 __FUNC_SIG(store) eq store jumpi
+    dup1 __FUNC_SIG(read) eq read jumpi
+
+    // revert on failed dispatch
+    0x00 0x00 revert
+
+    store:
+        STORE()
+    read:
+        READ()
 }
