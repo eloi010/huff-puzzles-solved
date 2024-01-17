@@ -6,11 +6,43 @@
  *  The task is to write within the `MAIN` macro below, write a functionality that takes an array of uint256 as an argument and returns the sum of all the numbers
  *
  *  NOTICE: The contract should revert when an unrecognized function is called
- */
+*/
 
 #define function sumArray(uint256[]) payable returns(uint256)
 
+#define macro SUM_ARRAY() = takes(0) returns(0) {
+    // load the array offset onto the stack
+    0x04 calldataload 0x04 add      // [offset]
+    // load and initialize i, sum and length
+    dup1 calldataload 0x00 0x00     // [i, sum, length, offset]
+
+    loop:
+        // if length == i, exit loop
+        dup1 dup4 eq ret jumpi  // [i, sum, length, offset]
+
+        0x01 add                // [i+1, sum, length, offset]
+        dup1 0x20 mul           // [factor, i, sum, length, offset]
+        dup5 add calldataload   // [arr_element, i, sum, length, offset]
+        dup3 add swap2 pop      // [i, new_sum, length, offset]
+
+        loop jump
+    
+    ret:
+        // store the sum in memory at offset 0
+        swap1 0x00 mstore       // [i, length, offset]
+        0x20 0x00 return
+}
 
 #define macro MAIN() = takes(0) returns(0) {
+    // load the function signature onto the stack
+    0x00 calldataload 0xe0 shr  // [func_sig]
 
+    // dispatch to the appropriate function
+    dup1 __FUNC_SIG(sumArray) eq sumArray jumpi
+
+    // revert on failed dispatch
+    0x00 0x00 revert
+
+    sumArray:
+        SUM_ARRAY()
 }
