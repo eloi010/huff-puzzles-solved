@@ -11,10 +11,36 @@
  *  NOTICE: The contract should revert when an unrecognized function is called
  */
 
- #define function foo() payable returns(uint256)
- #define function bar() payable returns(uint256)
+#define function foo() payable returns(uint256)
+#define function bar() payable returns(uint256)
 
+#define macro FOO() = takes(0) returns(0) {
+    // store 2 in memory at offset 0
+    0x02 0x00 mstore    // []
+    // return 2
+    0x20 0x00 return    // []
+}
+
+#define macro BAR() = takes(0) returns(0) {
+    // store 3 in memory at offset 0
+    0x03 0x00 mstore    // []
+    // return 3
+    0x20 0x00 return    // []
+}
 
 #define macro MAIN() = takes(0) returns(0) {
+    // load the function signature onto the stack
+    0x00 calldataload 0xe0 shr  // [func_sig]
 
+    // dispatch to the appropriate function
+    dup1 __FUNC_SIG(foo) eq foo jumpi
+    dup1 __FUNC_SIG(bar) eq bar jumpi
+
+    // revert on failed dispatch
+    0x00 0x00 revert
+
+    foo:
+        FOO()
+    bar:
+        BAR()
 }
