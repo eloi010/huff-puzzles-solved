@@ -14,5 +14,8 @@
 #define error OnlyHuff()
 
 #define macro MAIN() = takes(0) returns(0) {
-    
+    // store the error in memory
+    __ERROR(OnlyHuff) returndatasize mstore     // []
+    // revert with the 32-byte error stored in memory
+    0x20 0x00 revert                            // []
 }
